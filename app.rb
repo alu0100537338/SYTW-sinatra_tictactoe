@@ -2,12 +2,11 @@ require 'sinatra'
 require 'sass'
 require 'pp'
 require './usuarios.rb'
-require 'haml'
 
 settings.port = ENV['PORT'] || 4567
-enable :sessions
-#use Rack::Session::Pool, :expire_after => 2592000
-#set :session_secret, 'super secret'
+#enable :sessions
+use Rack::Session::Pool, :expire_after => 2592000
+set :session_secret, 'super secret'
 
 #configure :development, :test do
 #  set :sessions, :domain => 'example.com'
@@ -16,6 +15,16 @@ enable :sessions
 #configure :production do
 #  set :sessions, :domain => 'herokuapp.com'
 #end
+
+configure :development do
+	DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
+
+configure :production do
+	DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
+
+DataMapper.auto_upgrade!
 
 module TicTacToe
   HUMAN = CIRCLE = "circle" # human
@@ -42,6 +51,10 @@ module TicTacToe
 
   def board
     session["bs"]
+  end
+  
+  def usuario
+  	session["usuario"]
   end
 
   def [] key
@@ -160,6 +173,14 @@ get '/humanwins' do
   pp session
   begin
     m = if human_wins? then
+    			if (session["usuario"] != nil)
+    				user = Usuario.first(:usuario => session["usuario"])
+    				aux = user.num_ganadas
+    				aux = aux+1
+    				user.num_ganadas = aux
+    				user.save
+    				pp user    			
+    			end
           'Human wins'
         else 
           redirect '/'
@@ -175,6 +196,14 @@ get '/computerwins' do
   pp session
   begin
     m = if computer_wins? then
+    			if (session["usuario"] != nil)
+    				user = Usuario.first(:usuario => session["usuario"])
+    				aux = user.num_perdidas
+    				aux = aux+1
+    				user.num_perdidas = aux
+    				user.save
+    				pp user
+    			end
           'Computer wins'
         else 
           redirect '/'
@@ -183,6 +212,34 @@ get '/computerwins' do
   rescue
     redirect '/'
   end
+end
+
+post '/' do
+	if params[:logout]
+	  @usuario = nil
+	  session["usuario"] = nil
+	  session.clear
+  else
+	  nombre = params[:usuario]
+	  nombre = nombre["usuario"]
+	  usu = Usuario.first(:usuario => "#{nombre}")
+	  if usu == nil
+		  user = Usuario.create(params[:usuario])
+			user.save
+			Ejem = params[:usuario]
+			pp params[:usuario]
+			@usuario = Ejem["usuario"]
+			p "Atencion!"
+			pp @usuario
+			session["usuario"] = @usuario
+		else
+			p "Ya existe ese nombre de usuario"
+			@usuario = nil
+			session["usuario"] = nil
+			session.clear
+		end 
+	end
+	redirect '/'
 end
 
 not_found do
