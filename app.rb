@@ -146,7 +146,7 @@ helpers TicTacToe
 
 get %r{^/([abc][123])?$} do |human|
   if human then
-    puts "You played: #{human}!"
+    puts "Jugando: #{human}!"
     puts "session: "
     pp session
     if legal_moves.include? human
@@ -156,7 +156,7 @@ get %r{^/([abc][123])?$} do |human|
       redirect to ('/humanwins') if human_wins?
       redirect to('/') unless computer
       board[computer] = TicTacToe::CROSS
-      puts "I played: #{computer}!"
+      puts "Jugando: #{computer}!"
       puts "Tablero:  #{board.inspect}"
       redirect to ('/computerwins') if computer_wins?
     end
@@ -175,13 +175,11 @@ get '/humanwins' do
     m = if human_wins? then
     			if (session["usuario"] != nil)
     				user = Usuario.first(:usuario => session["usuario"])
-    				aux = user.num_ganadas
-    				aux = aux+1
-    				user.num_ganadas = aux
+    				user.num_ganadas = user.num_ganadas + 1
     				user.save
     				pp user    			
     			end
-          'Human wins'
+          'Tu ganas'
         else 
           redirect '/'
         end
@@ -198,13 +196,11 @@ get '/computerwins' do
     m = if computer_wins? then
     			if (session["usuario"] != nil)
     				user = Usuario.first(:usuario => session["usuario"])
-    				aux = user.num_perdidas
-    				aux = aux+1
-    				user.num_perdidas = aux
+    				user.num_perdidas = user.num_perdidas + 1
     				user.save
     				pp user
     			end
-          'Computer wins'
+          'La maquina gana'
         else 
           redirect '/'
         end
@@ -226,14 +222,14 @@ post '/' do
 	  if usu == nil
 		  user = Usuario.create(params[:usuario])
 			user.save
-			Ejem = params[:usuario]
+			Us = params[:usuario]
 			pp params[:usuario]
-			@usuario = Ejem["usuario"]
+			@usuario = Us["usuario"]
 			p "Atencion!"
 			pp @usuario
 			session["usuario"] = @usuario
 		else
-			p "Ya existe ese nombre de usuario"
+			p "Ya existe ese usuario"
 			@usuario = nil
 			session["usuario"] = nil
 			session.clear
