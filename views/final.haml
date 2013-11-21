@@ -1,5 +1,6 @@
 .button
 	%a{:href=>"/usuarios"}
+	  %br
 		Historial Partidas
 		
 .header
@@ -15,6 +16,11 @@
 			Bienvenido #{usuario}
 			%input{:type=>"hidden", :value=>"1", :name=>"Salir"}
 			%input{:type=>"submit", :value=>"Salir", :href=>"/"}
+			
+.button
+  %a{:href=>"/"}
+    %br
+    Volver a Jugar
 			
 .gameboard
   - HORIZONTALS.each do |row| 
