@@ -1,14 +1,47 @@
-Building a Simple Sinatra Tic-Tac-Toe game 
-==================================================
+Practica 7 - TicTacToe 
+======================
 
-App currently contains:
+Enunciado
+---------
 
-* app.rb - the application code
-* Gemfile - specifies the gems this app relies on
-* Gemfile.lock - automatically generated dependancy file
-* views/ - this is the default folder for erb views
-* layout.erb - this is the default layout to be used for all erb files
-* public/ - this is the default folder for serving static assets
-* Procfile - this tells Heroku or Foreman how to run the application
-* Rakefile- installs the gems and run the server
+TicTacToe usando DataMapper y SASS y desplegar en Heroku.
+
+
+Resolucion
+----------
+
+A traves del fichero usuarios.rb hemos creado el modelo de la Base de Datos, 
+creandola a traves del fichero app.rb, quien la guardara en development.db.
+
+Por ultimo se ha cambiado la apariencia del programa a traves de modificaciones
+en los ficheros ya dados, y la creacion de views/usuarios.haml, quien se encarga
+de mostrar un historial de los jugadores que han usado la aplicacion y sus resultados.
+
+
+Warning
+-------
+
+Es posible que sean necesarias librerias complementarias para el correcto funcionamiento:
+
+    sudo apt-get install libecpg-dev
+    sudo apt-get install postgresql-client
+    sudo apt-get install postgresql
+    
+
+Ejecucion
+---------
+
+Para ejecutar la aplicacion desde una consola:
+
+    1.rake
+    2.localhost:4567
+    
+Para acceder directamente:
+
+    http://boiling-refuge-5409.herokuapp.com/
+    
+-----------------------------------------------------------------------------------------------------------------
+Jessica A. Ramos Villarreal - ETSII-ULL
+
+
 
